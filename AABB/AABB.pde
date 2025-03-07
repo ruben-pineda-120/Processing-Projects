@@ -9,8 +9,6 @@ public class Wall {
     this.colorWall = colorWall;
   }
   public void draw() {
-    println(p.minVector);
-    println(p.maxVector);
     rectMode(CORNERS);
     fill(colorWall);
     rect(minVector.x, minVector.y, maxVector.x, maxVector.y);
@@ -57,6 +55,6 @@ void draw() {
 
 void mouseMoved() {
   for(Wall w : walls){
-    if p.checkCollision(w) println("Collided");
+    if (p.checkCollision(w)) println("Collided" + random(0, 100));
   }
 }
