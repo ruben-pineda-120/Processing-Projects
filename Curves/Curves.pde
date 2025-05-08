@@ -8,6 +8,17 @@ class Curve {
       controlPoints[i] = p[i];
       coeficients[i] = new PVector(0, 0);
     }
+  }
+  void draw() {
+    fill(0);
+    strokeWeight(10);
+    for (float t = 0; t < 1; t += 0.01f) {
+      float x = coeficients[0].x + coeficients[1].x * t + coeficients[2].x * pow(t, 2) + coeficients[3].x * pow(t, 3);
+      float y = coeficients[0].y + coeficients[1].y * t + coeficients[2].y * pow(t, 2) + coeficients[3].y * pow(t, 3);
+      point(x, y);
+    }
+  }
+  public void calculateInterpolation() {
     //Coeficients
     coeficients[0].x = controlPoints[0].x;
     coeficients[0].y = controlPoints[0].y;
@@ -21,14 +32,21 @@ class Curve {
     coeficients[3].x = -4.5 * controlPoints[0].x + 13.5 * controlPoints[1].x - 13.5 * controlPoints[2].x + 4.5 * controlPoints[3].x;
     coeficients[3].y = -4.5 * controlPoints[0].y + 13.5 * controlPoints[1].y - 13.5 * controlPoints[2].y + 4.5 * controlPoints[3].y;
   }
-  void draw() {
-    fill(0);
-    strokeWeight(10);
-    for (float t = 0; t < 1; t += 0.01f) {
-      float x = coeficients[0].x + coeficients[1].x * t + coeficients[2].x * pow(t, 2) + coeficients[3].x * pow(t, 3);
-      float y = coeficients[0].y + coeficients[1].y * t + coeficients[2].y * pow(t, 2) + coeficients[3].y * pow(t, 3);
-      point(x, y);
-    }
+  public void calculateBezier() {
+    // Coeficients
+    coeficients[0].x = controlPoints[0].x;
+    coeficients[0].y = controlPoints[0].y;
+    
+  
+     coeficients[1].x = 3 * (controlPoints[1].x - controlPoints[0].x);
+     coeficients[1].y = 3 * (controlPoints[1].y - controlPoints[0].y);
+     
+     coeficients[2].x = 3 * (controlPoints[2].x - controlPoints[1].x);
+     coeficients[2].y = 3 * (controlPoints[2].y - controlPoints[1].y);
+     
+     coeficients[3].x = controlPoints[3].x - controlPoints[0].x - coeficients[1].x - coeficients[2].x;
+     coeficients[3].y = controlPoints[3].y - controlPoints[0].y - coeficients[1].y - coeficients[2].y;
+     
   }
 }
 Curve c;
@@ -40,6 +58,8 @@ void setup() {
     new PVector(300, 400),
     new PVector(350, 250)
     });
+  //c.calculateInterpolation();
+  c.calculateBezier();
 }
 void draw() {
   background(255);
