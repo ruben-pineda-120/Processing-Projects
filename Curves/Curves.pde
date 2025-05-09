@@ -5,24 +5,29 @@ class Player {
   int currentCurve;
   PVector position;
   float t;
-  PImage image = loadImage("teto.jpg");
-  Player(int numOfCurves) {
+  float speed;
+  PImage image;
+  Player(int numOfCurves, float speed, PImage image) {
     this.numOfCurves = numOfCurves;
     this.position = new PVector(0, 0);
     this.t = 0;
+    this.speed = speed;
+    this.image = image;
   }
   void draw() {
     if (t == 0) {
       position = cs.get(currentCurve).controlPoints[0];
-      t += 0.01;
+      t += speed;
     } else {
       position.x = cs.get(currentCurve).coeficients[0].x + cs.get(currentCurve).coeficients[1].x * t + cs.get(currentCurve).coeficients[2].x * pow(t, 2) + cs.get(currentCurve).coeficients[3].x * pow(t, 3);
       position.y = cs.get(currentCurve).coeficients[0].y + cs.get(currentCurve).coeficients[1].y * t + cs.get(currentCurve).coeficients[2].y * pow(t, 2) + cs.get(currentCurve).coeficients[3].y * pow(t, 3);
-      if (t == 1){
+      if (t >= 1) {
         currentCurve++;
+        if (currentCurve >= numOfCurves) currentCurve = 0;
         t = 0;
+      } else {
+        t += speed;
       }
-      t += 0.01;
     }
     imageMode(CENTER);
     image(image, position.x, position.y, 50, 50);
@@ -79,7 +84,7 @@ class Curve {
   }
 }
 List<Curve> cs = new LinkedList<>();
-Player p;
+List<Player> ps = new LinkedList<>();
 void setup() {
   size(1000, 1000);
   cs.add(new Curve(new PVector[]{
@@ -109,12 +114,15 @@ void setup() {
   for (Curve c : cs) {
     c.calculateInterpolation();
   }
-  p = new Player(cs.size());
+  ps.add(new Player(cs.size(), 0.01, loadImage("teto.jpg")));
+  ps.add(new Player(cs.size(), 0.02, loadImage("teto.jpg")));
 }
 void draw() {
   background(255);
   for (Curve c : cs) {
     c.draw();
   }
-  p.draw();
+  for (Player p : ps) {
+    p.draw();
+  }
 }
