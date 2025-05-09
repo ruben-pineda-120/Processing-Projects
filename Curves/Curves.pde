@@ -1,3 +1,33 @@
+import java.util.List;
+import java.util.LinkedList;
+class Player {
+  int numOfCurves;
+  int currentCurve;
+  PVector position;
+  float t;
+  PImage image = loadImage("teto.jpg");
+  Player(int numOfCurves) {
+    this.numOfCurves = numOfCurves;
+    this.position = new PVector(0, 0);
+    this.t = 0;
+  }
+  void draw() {
+    if (t == 0) {
+      position = cs.get(currentCurve).controlPoints[0];
+      t += 0.01;
+    } else {
+      position.x = cs.get(currentCurve).coeficients[0].x + cs.get(currentCurve).coeficients[1].x * t + cs.get(currentCurve).coeficients[2].x * pow(t, 2) + cs.get(currentCurve).coeficients[3].x * pow(t, 3);
+      position.y = cs.get(currentCurve).coeficients[0].y + cs.get(currentCurve).coeficients[1].y * t + cs.get(currentCurve).coeficients[2].y * pow(t, 2) + cs.get(currentCurve).coeficients[3].y * pow(t, 3);
+      if (t == 1){
+        currentCurve++;
+        t = 0;
+      }
+      t += 0.01;
+    }
+    imageMode(CENTER);
+    image(image, position.x, position.y, 50, 50);
+  }
+}
 class Curve {
   PVector[] controlPoints;
   PVector[] coeficients;
@@ -36,32 +66,55 @@ class Curve {
     // Coeficients
     coeficients[0].x = controlPoints[0].x;
     coeficients[0].y = controlPoints[0].y;
-    
-  
-     coeficients[1].x = 3 * (controlPoints[1].x - controlPoints[0].x);
-     coeficients[1].y = 3 * (controlPoints[1].y - controlPoints[0].y);
-     
-     coeficients[2].x = 3 * (controlPoints[2].x - controlPoints[1].x);
-     coeficients[2].y = 3 * (controlPoints[2].y - controlPoints[1].y);
-     
-     coeficients[3].x = controlPoints[3].x - controlPoints[0].x - coeficients[1].x - coeficients[2].x;
-     coeficients[3].y = controlPoints[3].y - controlPoints[0].y - coeficients[1].y - coeficients[2].y;
-     
+
+
+    coeficients[1].x = 3 * (controlPoints[1].x - controlPoints[0].x);
+    coeficients[1].y = 3 * (controlPoints[1].y - controlPoints[0].y);
+
+    coeficients[2].x = 3 * (controlPoints[2].x - controlPoints[1].x);
+    coeficients[2].y = 3 * (controlPoints[2].y - controlPoints[1].y);
+
+    coeficients[3].x = controlPoints[3].x - controlPoints[0].x - coeficients[1].x - coeficients[2].x;
+    coeficients[3].y = controlPoints[3].y - controlPoints[0].y - coeficients[1].y - coeficients[2].y;
   }
 }
-Curve c;
+List<Curve> cs = new LinkedList<>();
+Player p;
 void setup() {
-  size(500, 500);
-  c = new Curve(new PVector[]{
-    new PVector(200, 200),
-    new PVector(250, 100),
-    new PVector(300, 400),
-    new PVector(350, 250)
-    });
-  //c.calculateInterpolation();
-  c.calculateBezier();
+  size(1000, 1000);
+  cs.add(new Curve(new PVector[]{
+    new PVector(200, 50),
+    new PVector(300, 150),
+    new PVector(400, 50),
+    new PVector(500, 150)
+    }));
+  cs.add(new Curve(new PVector[]{
+    new PVector(500, 150),
+    new PVector(600, 250),
+    new PVector(700, 350),
+    new PVector(650, 375)
+    }));
+  cs.add(new Curve(new PVector[]{
+    new PVector(650, 375),
+    new PVector(450, 250),
+    new PVector(375, 275),
+    new PVector(325, 375)
+    }));
+  cs.add(new Curve(new PVector[]{
+    new PVector(325, 375),
+    new PVector(275, 325),
+    new PVector(225, 400),
+    new PVector(200, 50)
+    }));
+  for (Curve c : cs) {
+    c.calculateInterpolation();
+  }
+  p = new Player(cs.size());
 }
 void draw() {
   background(255);
-  c.draw();
+  for (Curve c : cs) {
+    c.draw();
+  }
+  p.draw();
 }
