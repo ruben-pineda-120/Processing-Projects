@@ -30,7 +30,7 @@ class Player {
       }
     }
     imageMode(CENTER);
-    image(image, position.x, position.y, 50, 50);
+    image(image, position.x, position.y, 120, 120);
   }
 }
 class Curve {
@@ -101,21 +101,24 @@ void setup() {
     }));
   cs.add(new Curve(new PVector[]{
     new PVector(650, 375),
-    new PVector(450, 250),
+    new PVector(650, 500),
     new PVector(375, 275),
     new PVector(325, 375)
     }));
   cs.add(new Curve(new PVector[]{
     new PVector(325, 375),
     new PVector(275, 325),
-    new PVector(225, 400),
+    new PVector(250, 300),
     new PVector(200, 50)
     }));
   for (Curve c : cs) {
     c.calculateInterpolation();
+    //c.calculateBezier();
   }
-  ps.add(new Player(cs.size(), 0.01, loadImage("teto.jpg")));
-  ps.add(new Player(cs.size(), 0.02, loadImage("teto.jpg")));
+  ps.add(new Player(cs.size(), 0.005, loadImage("teto.jpg")));
+  ps.add(new Player(cs.size(), 0.01, loadImage("pearto.png")));
+  ps.add(new Player(cs.size(), 0.015, loadImage("tetoPlushie.png")));
+  ps.add(new Player(cs.size(), 0.02, loadImage("Osaka.png")));
 }
 void draw() {
   background(255);
